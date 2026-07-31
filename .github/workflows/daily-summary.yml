@@ -8,12 +8,25 @@ on:
   workflow_dispatch:      # Allow manual trigger
 
 jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      has_api_key: ${{ steps.check.outputs.has_api_key }}
+    steps:
+      - id: check
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -n "$OPENAI_API_KEY" ]; then
+            echo "has_api_key=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_api_key=false" >> "$GITHUB_OUTPUT"
+            echo "OPENAI_API_KEY is not configured; daily generation is skipped."
+          fi
+
   daily-summary:
-    # Secrets cannot be used directly in an `if`; expose only its presence here.
-    env:
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-    # The job stays idle until the required Actions secret is configured.
-    if: ${{ env.OPENAI_API_KEY != '' }}
+    needs: preflight
+    if: ${{ needs.preflight.outputs.has_api_key == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write  # Needed to commit changes
