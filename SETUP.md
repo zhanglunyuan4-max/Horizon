@@ -4,11 +4,11 @@ This fork is preconfigured for an AI-focused Chinese/English daily digest. It wa
 
 ## One required step
 
-Add an Actions repository secret named `OPENAI_API_KEY`:
+Add an Actions repository secret named `DEEPSEEK_API_KEY`:
 
 1. Open **Settings → Secrets and variables → Actions** in this repository.
 2. Select **New repository secret**.
-3. Name it `OPENAI_API_KEY` and paste an OpenAI API key as its value.
+3. Name it `DEEPSEEK_API_KEY` and paste a DeepSeek API key as its value.
 4. Open **Actions → Daily Horizon Summary → Run workflow** to generate the first briefing.
 
 The scheduled workflow runs at 23:00 UTC (07:00 China Standard Time). Until the secret is added, the workflow intentionally skips instead of failing.
