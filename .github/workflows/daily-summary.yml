@@ -9,8 +9,11 @@ on:
 
 jobs:
   daily-summary:
+    # Secrets cannot be used directly in an `if`; expose only its presence here.
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     # The job stays idle until the required Actions secret is configured.
-    if: ${{ secrets.OPENAI_API_KEY != '' }}
+    if: ${{ env.OPENAI_API_KEY != '' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write  # Needed to commit changes
